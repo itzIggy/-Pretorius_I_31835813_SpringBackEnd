@@ -3,19 +3,17 @@ package za.ac.nwu.ac.sh.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.stereotype.Repository;
-import za.ac.nwu.ac.repo.config.RepoConfig;
+import za.ac.nwu.ac.logic.config.LogicConfig;
 
-@Import({RepoConfig.class})
+@Import({LogicConfig.class})
 @Configuration
 @ComponentScan(basePackages = {
         "za.ac.nwu.ac.sh.controllers"
 })
 public class WebConfig extends WebSecurityConfigurerAdapter {
 
-    @Override
+    /*@Override
     protected void configure(HttpSecurity http) throws Exception{
         http
                 .authorizeRequests()
@@ -24,5 +22,5 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .permitAll();
-    }
+    }*/
 }

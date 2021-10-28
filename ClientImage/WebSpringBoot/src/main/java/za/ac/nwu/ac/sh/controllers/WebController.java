@@ -9,17 +9,17 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class WebController {
 
-    @RequestMapping(value = {"/login"},method = RequestMethod.GET)
+    @GetMapping(value = {"/login"})
     public ModelAndView login(){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
+        modelAndView.setViewName("Login");
         return modelAndView;
     }
 
     @RequestMapping(value = {"/register"},method = RequestMethod.GET)
     public ModelAndView register(){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("register");
+        modelAndView.setViewName("Register");
         return modelAndView;
     }
 

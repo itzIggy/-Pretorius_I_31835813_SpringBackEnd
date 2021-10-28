@@ -12,6 +12,8 @@
         <module>WebSpringBoot</module>
         <module>Repository</module>
         <module>Domain</module>
+        <module>Logic</module>
+        <module>Translator</module>
     </modules>
 
     <parent>

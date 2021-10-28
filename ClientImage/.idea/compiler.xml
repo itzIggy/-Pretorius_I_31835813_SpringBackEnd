@@ -6,16 +6,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Domain" />
-        <module name="WebSpringBoot" />
         <module name="Repository" />
+        <module name="Domain" />
+        <module name="Logic" />
+        <module name="WebSpringBoot" />
+        <module name="Translator" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Domain" options="-parameters" />
+      <module name="Logic" options="-parameters" />
       <module name="Repository" options="-parameters" />
+      <module name="Translator" options="-parameters" />
       <module name="WebSpringBoot" options="-parameters" />
     </option>
   </component>
