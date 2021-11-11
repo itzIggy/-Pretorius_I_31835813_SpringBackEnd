@@ -1,8 +1,11 @@
 package za.ac.nwu.ac.domain.persistence;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "member", schema = "imageclient")
@@ -16,6 +19,8 @@ public class Member implements Serializable {
     private String email;
     private String phone;
     private String password;
+
+    private Set<Photo> photo;
 
     public Member() {
     }
@@ -41,7 +46,7 @@ public class Member implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MEMBER_ID")
+    @Column(name = "member_id")
     public Long getMemberID() {
         return memberID;
     }
@@ -50,7 +55,7 @@ public class Member implements Serializable {
         this.memberID = memberID;
     }
 
-    @Column(name = "MEMBER_FNAME")
+    @Column(name = "member_fname")
     public String getFname() {
         return fname;
     }
@@ -59,7 +64,7 @@ public class Member implements Serializable {
         this.fname = fname;
     }
 
-    @Column(name = "MEMBER_LNAME")
+    @Column(name = "member_lname")
     public String getLname() {
         return lname;
     }
@@ -68,7 +73,7 @@ public class Member implements Serializable {
         this.lname = lname;
     }
 
-    @Column(name = "MEMBER_EMAIL")
+    @Column(name = "member_email")
     public String getEmail() {
         return email;
     }
@@ -77,7 +82,7 @@ public class Member implements Serializable {
         this.email = email;
     }
 
-    @Column(name = "MEMBER_PHONE")
+    @Column(name = "member_phone")
     public String getPhone() {
         return phone;
     }
@@ -86,7 +91,7 @@ public class Member implements Serializable {
         this.phone = phone;
     }
 
-    @Column(name = "MEMBER_PASSWORD")
+    @Column(name = "member_password")
     public String getPassword() {
         return password;
     }
@@ -95,17 +100,27 @@ public class Member implements Serializable {
         this.password = password;
     }
 
+    @JsonIgnore
+    @OneToMany(targetEntity = Photo.class, fetch = FetchType.LAZY, mappedBy = "member")
+    public Set<Photo> getPhoto(){
+        return photo;
+    }
+
+    public void setPhoto(Set<Photo> photo) {
+        this.photo = photo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Member member = (Member) o;
-        return Objects.equals(memberID, member.memberID) && Objects.equals(fname, member.fname) && Objects.equals(lname, member.lname) && Objects.equals(email, member.email) && Objects.equals(phone, member.phone) && Objects.equals(password, member.password);
+        return Objects.equals(memberID, member.memberID) && Objects.equals(fname, member.fname) && Objects.equals(lname, member.lname) && Objects.equals(email, member.email) && Objects.equals(phone, member.phone) && Objects.equals(password, member.password) && Objects.equals(photo, member.photo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(memberID, fname, lname, email, phone, password);
+        return Objects.hash(memberID, fname, lname, email, phone, password, photo);
     }
 
     @Override
@@ -117,6 +132,7 @@ public class Member implements Serializable {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", password='" + password + '\'' +
+                ", photo=" + photo +
                 '}';
     }
 }

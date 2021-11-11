@@ -7,8 +7,8 @@ import za.ac.nwu.ac.repo.config.RepoConfig;
 
 @Import({RepoConfig.class})
 @Configuration
-/*@ComponentScan(basePackages = {
+@ComponentScan(basePackages = {
         "za.ac.nwu.ac.translator"
-})*/
+})
 public class TranslatorConfig {
 }

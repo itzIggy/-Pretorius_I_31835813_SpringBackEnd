@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class WebController {
 
-    @GetMapping(value = {"/login"})
+    /*@GetMapping(value = {"/login"})
     public ModelAndView login(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Login");
@@ -21,6 +21,6 @@ public class WebController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("Register");
         return modelAndView;
-    }
+    }*/
 
 }

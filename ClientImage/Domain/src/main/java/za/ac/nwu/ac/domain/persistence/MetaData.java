@@ -1,43 +1,48 @@
 package za.ac.nwu.ac.domain.persistence;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "metadata", schema = "imageclient")
-public class MetaData implements Serializable{
+public class MetaData implements Serializable {
 
     private static final long serialVersionUID = -2291190826579963737L;
 
     private Long metaID;
-    private String metaFileName;
-    private String metaSize;
+    private String metaGeoLocation;
+    private String metaAuthor;
     private LocalDate metaDate;
-    private String metaFileType;
+    private String metaTag;
+
+    private Set<Photo> photo;
 
     public MetaData() {
     }
 
-    public MetaData(Long metaID, String metaFileName, String metaSize, LocalDate metaDate, String metaFileType) {
+    public MetaData(Long metaID, String metaGeoLocation, String metaAuthor, LocalDate metaDate, String metaTag) {
         this.metaID = metaID;
-        this.metaFileName = metaFileName;
-        this.metaSize = metaSize;
+        this.metaGeoLocation = metaGeoLocation;
+        this.metaAuthor = metaAuthor;
         this.metaDate = metaDate;
-        this.metaFileType = metaFileType;
+        this.metaTag = metaTag;
     }
 
-    public MetaData(String metaFileName, String metaSize, LocalDate metaDate, String metaFileType) {
-        this.metaFileName = metaFileName;
-        this.metaSize = metaSize;
+    public MetaData(String metaGeoLocation, String metaAuthor, LocalDate metaDate, String metaTag) {
+        this.metaGeoLocation = metaGeoLocation;
+        this.metaAuthor = metaAuthor;
         this.metaDate = metaDate;
-        this.metaFileType = metaFileType;
+        this.metaTag = metaTag;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "meta_ID")
+    @Column(name = "meta_id")
     public Long getMetaID() {
         return metaID;
     }
@@ -46,22 +51,22 @@ public class MetaData implements Serializable{
         this.metaID = metaID;
     }
 
-    @Column(name = "meta_filename")
-    public String getMetaFileName() {
-        return metaFileName;
+    @Column(name = "meta_geolocation")
+    public String getMetaGeoLocation() {
+        return metaGeoLocation;
     }
 
-    public void setMetaFileName(String metaFileName) {
-        this.metaFileName = metaFileName;
+    public void setMetaGeoLocation(String metaGeoLocation) {
+        this.metaGeoLocation = metaGeoLocation;
     }
 
-    @Column(name = "meta_filesize")
-    public String getMetaSize() {
-        return metaSize;
+    @Column(name = "meta_author")
+    public String getMetaAuthor() {
+        return metaAuthor;
     }
 
-    public void setMetaSize(String metaSize) {
-        this.metaSize = metaSize;
+    public void setMetaAuthor(String metaAuthor) {
+        this.metaAuthor = metaAuthor;
     }
 
     @Column(name = "meta_date")
@@ -73,13 +78,23 @@ public class MetaData implements Serializable{
         this.metaDate = metaDate;
     }
 
-    @Column(name = "meta_filetype")
-    public String getMetaFileType() {
-        return metaFileType;
+    @Column(name = "meta_tag")
+    public String getMetaTag() {
+        return metaTag;
     }
 
-    public void setMetaFileType(String metaFileType) {
-        this.metaFileType = metaFileType;
+    public void setMetaTag(String metaTag) {
+        this.metaTag = metaTag;
+    }
+
+    @JsonIgnore
+    @OneToMany(targetEntity = Photo.class, fetch = FetchType.LAZY, mappedBy = "metaData")
+    public Set<Photo> getPhoto(){
+        return photo;
+    }
+
+    public void setPhoto(Set<Photo> photo) {
+        this.photo = photo;
     }
 
     @Override
@@ -87,22 +102,25 @@ public class MetaData implements Serializable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MetaData metaData = (MetaData) o;
-        return Objects.equals(metaID, metaData.metaID) && Objects.equals(metaFileName, metaData.metaFileName) && Objects.equals(metaSize, metaData.metaSize) && Objects.equals(metaDate, metaData.metaDate) && Objects.equals(metaFileType, metaData.metaFileType);
+        return Objects.equals(metaID, metaData.metaID) && Objects.equals(metaGeoLocation, metaData.metaGeoLocation) && Objects.equals(metaAuthor, metaData.metaAuthor) && Objects.equals(metaDate, metaData.metaDate) && Objects.equals(metaTag, metaData.metaTag) && Objects.equals(photo, metaData.photo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(metaID, metaFileName, metaSize, metaDate, metaFileType);
+        return Objects.hash(metaID, metaGeoLocation, metaAuthor, metaDate, metaTag, photo);
     }
 
     @Override
     public String toString() {
         return "MetaData{" +
                 "metaID=" + metaID +
-                ", metaFileName='" + metaFileName + '\'' +
-                ", metaSize='" + metaSize + '\'' +
+                ", metaGeoLocation='" + metaGeoLocation + '\'' +
+                ", metaAuthor='" + metaAuthor + '\'' +
                 ", metaDate=" + metaDate +
-                ", metaFileType='" + metaFileType + '\'' +
+                ", metaTag='" + metaTag + '\'' +
+                ", photo=" + photo +
                 '}';
     }
 }
+
+

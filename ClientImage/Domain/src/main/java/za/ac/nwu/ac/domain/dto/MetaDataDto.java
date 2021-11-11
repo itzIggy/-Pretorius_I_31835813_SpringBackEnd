@@ -10,42 +10,42 @@ public class MetaDataDto implements Serializable {
 
     private static final long serialVersionUID = -1060158268568159328L;
 
-    private String metafileName;
-    private String metaSize;
+    private String metaGeoLocation;
+    private String metaAuthor;
     private LocalDate metaDate;
-    private String metaFileType;
+    private String metaTag;
 
     public MetaDataDto() {
     }
 
-    public MetaDataDto(String metafileName, String metaSize, LocalDate metaDate, String metaFileType) {
-        this.metafileName = metafileName;
-        this.metaSize = metaSize;
+    public MetaDataDto(String metaGeoLocation, String metaAuthor, LocalDate metaDate, String metaTag) {
+        this.metaGeoLocation = metaGeoLocation;
+        this.metaAuthor = metaAuthor;
         this.metaDate = metaDate;
-        this.metaFileType = metaFileType;
+        this.metaTag = metaTag;
     }
 
     public MetaDataDto(MetaData metaData){
-        metaData.setMetaFileName(metaData.getMetaFileName());
-        metaData.setMetaSize(metaData.getMetaSize());
+        metaData.setMetaGeoLocation(metaData.getMetaGeoLocation());
+        metaData.setMetaAuthor(metaData.getMetaAuthor());
         metaData.setMetaDate(metaData.getMetaDate());
-        metaData.setMetaFileType(metaData.getMetaFileType());
+        metaData.setMetaTag(metaData.getMetaTag());
     }
 
-    public String getMetafileName() {
-        return metafileName;
+    public String getMetaGeoLocation() {
+        return metaGeoLocation;
     }
 
-    public void setMetafileName(String metafileName) {
-        this.metafileName = metafileName;
+    public void setMetaGeoLocation(String metaGeoLocation) {
+        this.metaGeoLocation = metaGeoLocation;
     }
 
-    public String getMetaSize() {
-        return metaSize;
+    public String getMetaAuthor() {
+        return metaAuthor;
     }
 
-    public void setMetaSize(String metaSize) {
-        this.metaSize = metaSize;
+    public void setMetaAuthor(String metaAuthor) {
+        this.metaAuthor = metaAuthor;
     }
 
     public LocalDate getMetaDate() {
@@ -56,12 +56,12 @@ public class MetaDataDto implements Serializable {
         this.metaDate = metaDate;
     }
 
-    public String getMetaFileType() {
-        return metaFileType;
+    public String getMetaTag() {
+        return metaTag;
     }
 
-    public void setMetaFileType(String metaFileType) {
-        this.metaFileType = metaFileType;
+    public void setMetaTag(String metaTag) {
+        this.metaTag = metaTag;
     }
 
     @Override
@@ -69,21 +69,21 @@ public class MetaDataDto implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MetaDataDto that = (MetaDataDto) o;
-        return Objects.equals(metafileName, that.metafileName) && Objects.equals(metaSize, that.metaSize) && Objects.equals(metaDate, that.metaDate) && Objects.equals(metaFileType, that.metaFileType);
+        return Objects.equals(metaGeoLocation, that.metaGeoLocation) && Objects.equals(metaAuthor, that.metaAuthor) && Objects.equals(metaDate, that.metaDate) && Objects.equals(metaTag, that.metaTag);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(metafileName, metaSize, metaDate, metaFileType);
+        return Objects.hash(metaGeoLocation, metaAuthor, metaDate, metaTag);
     }
 
     @Override
     public String toString() {
         return "MetaDataDto{" +
-                "metafileName='" + metafileName + '\'' +
-                ", metaSize='" + metaSize + '\'' +
+                "metaGeoLocation='" + metaGeoLocation + '\'' +
+                ", metaAuthor='" + metaAuthor + '\'' +
                 ", metaDate=" + metaDate +
-                ", metaFileType='" + metaFileType + '\'' +
+                ", metaTag='" + metaTag + '\'' +
                 '}';
     }
 }
