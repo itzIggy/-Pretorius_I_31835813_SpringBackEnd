@@ -11,16 +11,5 @@ import za.ac.nwu.ac.logic.config.LogicConfig;
 @ComponentScan(basePackages = {
         "za.ac.nwu.ac.sh.controllers"
 })
-public class WebConfig extends WebSecurityConfigurerAdapter {
-
-    /*@Override
-    protected void configure(HttpSecurity http) throws Exception{
-        http
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .permitAll();
-    }*/
+public class WebConfig{
 }

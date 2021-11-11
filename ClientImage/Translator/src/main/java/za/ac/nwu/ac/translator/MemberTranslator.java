@@ -1,9 +1,10 @@
-package za.ac.nwu.ac.logic.flow;
+package za.ac.nwu.ac.translator;
 
 import za.ac.nwu.ac.domain.dto.MemberDto;
 
 import java.util.List;
 
-public interface MemberFlow {
+public interface MemberTranslator {
+
     List<MemberDto> getAllMembers();
 }
