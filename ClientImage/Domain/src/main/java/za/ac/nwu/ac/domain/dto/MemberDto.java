@@ -1,6 +1,7 @@
 package za.ac.nwu.ac.domain.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import za.ac.nwu.ac.domain.persistence.Member;
 
 import java.io.Serializable;
@@ -73,6 +74,11 @@ public class MemberDto implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @JsonIgnore
+    public Member getMember(){
+        return new Member(getFname(),getLname(),getEmail(),getPhone(),getPassword());
     }
 
     @Override

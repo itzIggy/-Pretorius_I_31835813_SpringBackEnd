@@ -24,4 +24,24 @@ public class MemberFlowImpl implements MemberFlow {
     public List<MemberDto> getAllMembers(){
         return memberTranslator.getAllMembers();
     }
+
+    @Override
+    public MemberDto addMember(MemberDto memberDto){
+        return memberTranslator.addMember(memberDto);
+    }
+
+    @Override
+    public void deleteMemberByEmail(String email){
+        memberTranslator.deleteMemberByEmail(email);
+    }
+
+    @Override
+    public MemberDto getMemberByEmail(String email){
+        return memberTranslator.getMemberByEmail(email);
+    }
+
+    @Override
+    public MemberDto modifyMember(MemberDto memberDto){
+        return memberTranslator.modifyMember(memberDto);
+    }
 }

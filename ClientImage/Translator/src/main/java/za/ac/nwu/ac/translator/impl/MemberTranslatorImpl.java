@@ -36,4 +36,45 @@ public class MemberTranslatorImpl implements MemberTranslator {
 
         return  memberDtos;
     }
+
+    @Override
+    public MemberDto addMember(MemberDto memberDto){
+        try{
+            Member member = repoMember.save(memberDto.getMember());
+            return new MemberDto(member);
+        }catch (Exception e){
+            throw new RuntimeException("Unable to save to DB!",e);
+        }
+
+    }
+
+    @Override
+    public MemberDto getMemberByEmail(String email){
+        try{
+            Member member = repoMember.getMemberByEmail(email);
+            return new MemberDto(member);
+        }catch (Exception e){
+            throw new RuntimeException("Unable to retrieve from DB!",e);
+        }
+    }
+
+
+    @Override
+    public void deleteMemberByEmail(String email){
+        try{
+            repoMember.deleteMemberByEmail(email);
+        }catch (Exception e){
+            throw new RuntimeException("Unable to delete from DB!",e);
+        }
+    }
+
+    @Override
+    public MemberDto modifyMember(MemberDto memberDto) {
+        try{
+            Member member =repoMember.save(memberDto.getMember());
+            return new MemberDto(member);
+        }catch (Exception e){
+            throw new RuntimeException("Unable to save to DB");
+        }
+    }
 }
