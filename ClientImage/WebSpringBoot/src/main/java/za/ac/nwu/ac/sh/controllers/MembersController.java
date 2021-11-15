@@ -7,15 +7,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.nwu.ac.domain.dto.MemberDto;
-import za.ac.nwu.ac.domain.persistence.Member;
 import za.ac.nwu.ac.domain.service.GeneralResponse;
 import za.ac.nwu.ac.logic.flow.MemberFlow;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("Members")
-/*@CrossOrigin(origins = "http://localhost:4200")*/
 public class MembersController {
 
     private final MemberFlow memberFlow;

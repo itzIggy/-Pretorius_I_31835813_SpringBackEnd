@@ -1,3 +1,4 @@
+/*
 package za.ac.nwu.ac.sh.service;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -64,3 +65,4 @@ public class AmazonS3Service {
 
 
 }
+*/
