@@ -36,6 +36,11 @@ public class MemberDto implements Serializable {
         this.setPassword(member.getPassword());
     }
 
+    public MemberDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public String getFname() {
         return fname;
     }

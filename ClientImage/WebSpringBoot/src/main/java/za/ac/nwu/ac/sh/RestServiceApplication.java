@@ -1,5 +1,6 @@
 package za.ac.nwu.ac.sh;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.boot.SpringApplication;
@@ -9,13 +10,31 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import za.ac.nwu.ac.domain.persistence.Member;
+import za.ac.nwu.ac.repo.persistence.RepoMember;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-//@SpringBootApplication
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication
 public class RestServiceApplication {
 
+    @Autowired
+    private RepoMember repoMember;
+
+    @PostConstruct
+    public void initUsers() {
+        List<Member> members = Stream.of(
+                new Member("Ivan", "Pretorius", "ivan@gmail.com", "0797515646","Ivan321" ),
+                new Member("Johan", "Pretorius", "johan@gmail.com", "0797515646","Johan123" ),
+                new Member("Sean", "Pretorius", "sean@gmail.com", "0797515646","Sean123" ),
+                new Member("Zian", "Pretorius", "zian@gmail.com", "0797515646","Zian123" )
+        ).collect(Collectors.toList());
+        repoMember.saveAll(members);
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(RestServiceApplication.class, args);

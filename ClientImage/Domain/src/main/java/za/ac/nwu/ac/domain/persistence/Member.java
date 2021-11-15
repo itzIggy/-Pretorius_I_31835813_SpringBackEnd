@@ -1,12 +1,18 @@
 package za.ac.nwu.ac.domain.persistence;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "member", schema = "imageclient")
 public class Member implements Serializable {
@@ -21,10 +27,6 @@ public class Member implements Serializable {
     private String password;
 
     private Set<Photo> photo;
-
-    public Member() {
-    }
-
 
     public Member(Long memberID, String fname, String lname, String email, String phone, String password) {
         this.memberID = memberID;

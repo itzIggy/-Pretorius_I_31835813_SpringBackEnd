@@ -4,12 +4,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import za.ac.nwu.ac.domain.dto.MemberDto;
 import za.ac.nwu.ac.domain.persistence.Member;
 
 import javax.transaction.Transactional;
 
 @Repository
 public interface RepoMember extends JpaRepository<Member, Long> {
+    Member findByEmail(String email);
+
     @Query(value = "SELECT      " +
             "        m       " +
             "        FROM       " +
