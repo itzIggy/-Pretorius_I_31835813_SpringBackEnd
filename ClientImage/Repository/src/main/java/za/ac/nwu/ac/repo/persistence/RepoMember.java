@@ -13,6 +13,8 @@ import javax.transaction.Transactional;
 public interface RepoMember extends JpaRepository<Member, Long> {
     Member findByEmail(String email);
 
+    boolean existsByEmail(String email);
+
     @Query(value = "SELECT      " +
             "        m       " +
             "        FROM       " +
@@ -20,6 +22,14 @@ public interface RepoMember extends JpaRepository<Member, Long> {
             "        m          " +
             "WHERE m.email = :email" )
     Member getMemberByEmail(String email);
+
+    @Query(value = "SELECT      " +
+            "        m.memberID  " +
+            "        FROM       " +
+            "        Member     " +
+            "        m          " +
+            "WHERE m.email = :email" )
+    Long getMemberEmailByID(String email);
 
     @Transactional
     @Modifying

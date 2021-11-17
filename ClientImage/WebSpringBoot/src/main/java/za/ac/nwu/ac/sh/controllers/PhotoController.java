@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import za.ac.nwu.ac.domain.dto.MemberDto;
+import za.ac.nwu.ac.domain.dto.PhotoDto;
 import za.ac.nwu.ac.domain.service.GeneralResponse;
 import za.ac.nwu.ac.logic.flow.PhotoFlow;
 
@@ -46,14 +47,11 @@ public class PhotoController {
         return new ResponseEntity<>(photoFlow.deleteFile(fileName),HttpStatus.OK);
     }
 
-    @GetMapping("/getPhoto/{fileName}")
-    public ResponseEntity<String> getPhoto(@PathVariable String fileName){
-        return new ResponseEntity<>(photoFlow.GetPhoto(fileName),HttpStatus.OK);
-    }
-
-    @GetMapping("/savePhoto/{file}")
-    public ResponseEntity<String> savePhoto(@PathVariable MultipartFile file){
-        return new ResponseEntity<>(photoFlow.SavePhoto(file),HttpStatus.OK);
+    @GetMapping("/getPhotos")
+    public ResponseEntity<GeneralResponse<List<String>>> getPhoto(){
+        List<String> photoDtos = photoFlow.getPhotos();
+        GeneralResponse<List<String>> response = new GeneralResponse<>(true,photoDtos);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

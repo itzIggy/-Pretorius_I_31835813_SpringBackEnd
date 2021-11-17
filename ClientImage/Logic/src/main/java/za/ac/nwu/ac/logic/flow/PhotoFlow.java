@@ -2,13 +2,13 @@ package za.ac.nwu.ac.logic.flow;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface PhotoFlow {
 
-    String GetPhoto(String fileName);
+    List<String> getPhotos();
 
     String DeletePhoto(String fileName);
-
-    String SavePhoto(MultipartFile file);
 
     byte[] DownloadPhoto(String fileName);
 

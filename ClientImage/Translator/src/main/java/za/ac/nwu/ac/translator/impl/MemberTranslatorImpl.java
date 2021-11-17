@@ -77,4 +77,6 @@ public class MemberTranslatorImpl implements MemberTranslator {
             throw new RuntimeException("Unable to save to DB");
         }
     }
+
+
 }

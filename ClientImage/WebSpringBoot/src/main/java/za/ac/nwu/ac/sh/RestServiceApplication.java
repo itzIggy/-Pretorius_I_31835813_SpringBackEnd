@@ -1,13 +1,10 @@
 package za.ac.nwu.ac.sh;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.Ordered;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import za.ac.nwu.ac.domain.persistence.Member;
@@ -28,10 +25,10 @@ public class RestServiceApplication {
     @PostConstruct
     public void initUsers() {
         List<Member> members = Stream.of(
-                new Member("Ivan", "Pretorius", "ivan@gmail.com", "0797515646","Ivan321" ),
-                new Member("Johan", "Pretorius", "johan@gmail.com", "0797515646","Johan123" ),
-                new Member("Sean", "Pretorius", "sean@gmail.com", "0797515646","Sean123" ),
-                new Member("Zian", "Pretorius", "zian@gmail.com", "0797515646","Zian123" )
+                new Member("Ivan", "Pretorius", "ivan@gmail.com", "0797515646","Ivan123" ),
+                new Member("Johan", "Botha", "johan@gmail.com", "0825598653","Johan123" ),
+                new Member("Sean", "Oosthuizen", "sean@gmail.com", "0794463258","Sean123" ),
+                new Member("Zian", "DeJager", "zian@gmail.com", "0825789125","Zian123" )
         ).collect(Collectors.toList());
         repoMember.saveAll(members);
     }
@@ -40,7 +37,7 @@ public class RestServiceApplication {
         SpringApplication.run(RestServiceApplication.class, args);
     }
 
-    @Bean
+    /*@Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
@@ -54,5 +51,5 @@ public class RestServiceApplication {
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedCorsConfigurationSource);
-    }
+    }*/
 }

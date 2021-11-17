@@ -8,6 +8,7 @@ import za.ac.nwu.ac.translator.MemberTranslator;
 import za.ac.nwu.ac.translator.PhotoTranslator;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Transactional
 @Component
@@ -21,8 +22,8 @@ public class PhotoFlowImpl implements PhotoFlow {
     }
 
     @Override
-    public String GetPhoto(String fileName){
-        return photoTranslator.getPhoto(fileName);
+    public List<String> getPhotos(){
+        return photoTranslator.getPhotos();
     }
 
     @Override
@@ -31,11 +32,6 @@ public class PhotoFlowImpl implements PhotoFlow {
     @Override
     public String DeletePhoto(String fileName){
         return photoTranslator.deletePhoto(fileName);
-    }
-
-    @Override
-    public String SavePhoto(MultipartFile file){
-        return photoTranslator.savePhoto(file);
     }
 
     @Override

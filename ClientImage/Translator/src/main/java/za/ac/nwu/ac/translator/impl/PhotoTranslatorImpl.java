@@ -1,6 +1,5 @@
 package za.ac.nwu.ac.translator.impl;
 
-import com.amazonaws.services.elasticache.model.Authentication;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
@@ -10,11 +9,14 @@ import com.amazonaws.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import za.ac.nwu.ac.domain.dto.PhotoDto;
+import za.ac.nwu.ac.domain.persistence.Member;
 import za.ac.nwu.ac.domain.persistence.Photo;
+import za.ac.nwu.ac.repo.persistence.RepoMember;
 import za.ac.nwu.ac.repo.persistence.RepoPhoto;
 import za.ac.nwu.ac.translator.PhotoTranslator;
 
@@ -22,7 +24,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Base64;
+import java.util.*;
 
 @Component
 @Transactional
@@ -30,6 +32,7 @@ import java.util.Base64;
 public class PhotoTranslatorImpl implements PhotoTranslator {
 
     private final RepoPhoto repoPhoto;
+    private final RepoMember repoMember;
 
     @Value("imagestorage323")
     private String bucket;
@@ -38,32 +41,67 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
     private AmazonS3 amazonS3;
 
     @Autowired
-    public PhotoTranslatorImpl(RepoPhoto repoPhoto) {
+    public PhotoTranslatorImpl(RepoPhoto repoPhoto, RepoMember repoMember) {
         this.repoPhoto = repoPhoto;
+        this.repoMember = repoMember;
     }
 
     @Override
     public String uploadFile(MultipartFile file){
-        File fileObject = convertMultipartFile(file);
+
+        File fileObj = convertMultipartFile(file);
         String filename = System.currentTimeMillis()+"_"+file.getOriginalFilename();
-        amazonS3.putObject(new PutObjectRequest(bucket,filename,fileObject));
-        fileObject.delete();
-        return "File Uploaded : " + filename;
+        amazonS3.putObject(new PutObjectRequest(bucket,filename,fileObj));
+        fileObj.delete();
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        Member member = repoMember.getMemberByEmail(email);
+
+        String generateLink =  "" + System.currentTimeMillis();
+
+        PhotoDto photoDto = new PhotoDto(filename,generateLink,member);
+
+        Photo photo = repoPhoto.save(photoDto.getPhotos());
+
+        return "File Uploaded and saved : " + filename;
+    }
+
+    public Long memberEmailtoID(String email){
+
+        Long memberID = repoMember.getMemberEmailByID(email);
+
+        return memberID;
     }
 
     @Override
-    public String getPhoto(String fileName) {
-        S3Object s3Object = amazonS3.getObject(bucket, fileName);
-        S3ObjectInputStream inputStream = s3Object.getObjectContent();
-        try {
-            byte[] content = IOUtils.toByteArray(inputStream);
-            String encoded = Base64.getEncoder().encodeToString(content);
-            return encoded;
-        } catch (IOException e) {
-            e.printStackTrace();
+    public List<String> getPhotos() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        Long memberID = memberEmailtoID(email);
+
+        List<Photo> photos = repoPhoto.getPhotosByID(memberID);
+
+        LinkedList bytes = new LinkedList();
+
+        for (Photo photo : photos) {
+
+            S3Object s3Object = amazonS3.getObject(bucket, photo.getPhotoURL());
+            S3ObjectInputStream inputStream = s3Object.getObjectContent();
+            try {
+                byte[] content = IOUtils.toByteArray(inputStream);
+                String encoded = Base64.getEncoder().encodeToString(content);
+                bytes.add(encoded);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return null;
+        return bytes;
     }
+
 
     @Override
     public byte[] downloadPhoto(String fileName) {
@@ -85,16 +123,6 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
 
         return fileName+" removed.";
 
-    }
-
-    @Override
-    public String savePhoto(MultipartFile file) {
-
-        File fileObj = convertMultipartFile(file);
-        String filename = System.currentTimeMillis()+"_"+file.getOriginalFilename();
-        amazonS3.putObject(new PutObjectRequest(bucket,filename,fileObj));
-        fileObj.delete();
-        return "File Uploaded : " + filename;
     }
 
     private File convertMultipartFile (MultipartFile file)

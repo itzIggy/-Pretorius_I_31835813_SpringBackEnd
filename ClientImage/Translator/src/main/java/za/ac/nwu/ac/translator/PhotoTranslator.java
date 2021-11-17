@@ -3,13 +3,13 @@ package za.ac.nwu.ac.translator;
 import org.springframework.web.multipart.MultipartFile;
 import za.ac.nwu.ac.domain.dto.PhotoDto;
 
+import java.util.List;
+
 public interface PhotoTranslator {
 
-    String getPhoto(String fileName);
+    List<String> getPhotos();
 
     String deletePhoto(String fileName);
-
-    String savePhoto(MultipartFile file);
 
     byte[] downloadPhoto(String fileName);
 

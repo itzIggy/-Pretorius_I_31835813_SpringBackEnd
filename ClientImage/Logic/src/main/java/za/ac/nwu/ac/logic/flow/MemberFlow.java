@@ -6,8 +6,12 @@ import java.util.List;
 
 public interface MemberFlow {
     List<MemberDto> getAllMembers();
+
     MemberDto addMember(MemberDto memberDto);
+
     void deleteMemberByEmail(String email);
+
     MemberDto getMemberByEmail(String email);
+
     MemberDto modifyMember(MemberDto memberDto);
 }
