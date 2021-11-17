@@ -18,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("photo")
+@CrossOrigin("*")
 public class PhotoController {
 
     private final PhotoFlow photoFlow;
