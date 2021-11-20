@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import za.ac.nwu.ac.domain.dto.MemberDto;
 import za.ac.nwu.ac.domain.dto.PhotoDto;
+import za.ac.nwu.ac.domain.dto.PhotoQuickStoreDto;
 import za.ac.nwu.ac.domain.service.GeneralResponse;
 import za.ac.nwu.ac.logic.flow.PhotoFlow;
 
@@ -27,8 +28,9 @@ public class PhotoController {
     public PhotoController (PhotoFlow photoFlow){this.photoFlow=photoFlow;}
 
     @PostMapping("/uploadFile")
-    public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile multipartFile){
-        return new ResponseEntity<>(photoFlow.uploadFile(multipartFile), HttpStatus.OK);
+    public ResponseEntity<GeneralResponse<String>> uploadFile(@RequestParam(value = "file") MultipartFile multipartFile){
+        GeneralResponse<String> response = new GeneralResponse<>(true,photoFlow.uploadFile(multipartFile));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/downloadFile/{fileName}")
@@ -49,9 +51,9 @@ public class PhotoController {
     }
 
     @GetMapping("/getPhotos")
-    public ResponseEntity<GeneralResponse<List<String>>> getPhoto(){
-        List<String> photoDtos = photoFlow.getPhotos();
-        GeneralResponse<List<String>> response = new GeneralResponse<>(true,photoDtos);
+    public ResponseEntity<GeneralResponse<List<PhotoQuickStoreDto>>> getPhoto(){
+        List<PhotoQuickStoreDto> photoDtos = photoFlow.getPhotos();
+        GeneralResponse<List<PhotoQuickStoreDto>> response = new GeneralResponse<>(true,photoDtos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

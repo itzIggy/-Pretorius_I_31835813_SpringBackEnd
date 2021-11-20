@@ -3,6 +3,7 @@ package za.ac.nwu.ac.logic.flow.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import za.ac.nwu.ac.domain.dto.PhotoQuickStoreDto;
 import za.ac.nwu.ac.logic.flow.PhotoFlow;
 import za.ac.nwu.ac.translator.MemberTranslator;
 import za.ac.nwu.ac.translator.PhotoTranslator;
@@ -22,7 +23,7 @@ public class PhotoFlowImpl implements PhotoFlow {
     }
 
     @Override
-    public List<String> getPhotos(){
+    public List<PhotoQuickStoreDto> getPhotos(){
         return photoTranslator.getPhotos();
     }
 

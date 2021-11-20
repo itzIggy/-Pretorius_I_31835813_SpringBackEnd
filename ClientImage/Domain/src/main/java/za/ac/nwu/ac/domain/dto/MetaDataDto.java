@@ -10,80 +10,57 @@ public class MetaDataDto implements Serializable {
 
     private static final long serialVersionUID = -1060158268568159328L;
 
-    private String metaGeoLocation;
-    private String metaAuthor;
-    private LocalDate metaDate;
-    private String metaTag;
+    private Long metaSize;
+    private String metaType;
 
     public MetaDataDto() {
     }
 
-    public MetaDataDto(String metaGeoLocation, String metaAuthor, LocalDate metaDate, String metaTag) {
-        this.metaGeoLocation = metaGeoLocation;
-        this.metaAuthor = metaAuthor;
-        this.metaDate = metaDate;
-        this.metaTag = metaTag;
+    public MetaDataDto(Long metaSize, String metaType) {
+        this.metaSize = metaSize;
+        this.metaType = metaType;
     }
 
     public MetaDataDto(MetaData metaData){
-        metaData.setMetaGeoLocation(metaData.getMetaGeoLocation());
-        metaData.setMetaAuthor(metaData.getMetaAuthor());
-        metaData.setMetaDate(metaData.getMetaDate());
-        metaData.setMetaTag(metaData.getMetaTag());
+        metaData.setMetaSize(metaData.getMetaSize());
+        metaData.setMetaType(metaData.getMetaType());
     }
 
-    public String getMetaGeoLocation() {
-        return metaGeoLocation;
+    public Long getMetaSize() {
+        return metaSize;
     }
 
-    public void setMetaGeoLocation(String metaGeoLocation) {
-        this.metaGeoLocation = metaGeoLocation;
+    public void setMetaSize(Long metaSize) {
+        this.metaSize = metaSize;
     }
 
-    public String getMetaAuthor() {
-        return metaAuthor;
+    public String getMetaType() {
+        return metaType;
     }
 
-    public void setMetaAuthor(String metaAuthor) {
-        this.metaAuthor = metaAuthor;
+    public void setMetaType(String metaType) {
+        this.metaType = metaType;
     }
 
-    public LocalDate getMetaDate() {
-        return metaDate;
-    }
-
-    public void setMetaDate(LocalDate metaDate) {
-        this.metaDate = metaDate;
-    }
-
-    public String getMetaTag() {
-        return metaTag;
-    }
-
-    public void setMetaTag(String metaTag) {
-        this.metaTag = metaTag;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MetaDataDto that = (MetaDataDto) o;
-        return Objects.equals(metaGeoLocation, that.metaGeoLocation) && Objects.equals(metaAuthor, that.metaAuthor) && Objects.equals(metaDate, that.metaDate) && Objects.equals(metaTag, that.metaTag);
+        return Objects.equals(metaSize, that.metaSize) && Objects.equals(metaType, that.metaType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(metaGeoLocation, metaAuthor, metaDate, metaTag);
+        return Objects.hash(metaSize, metaType);
     }
 
     @Override
     public String toString() {
         return "MetaDataDto{" +
-                "metaGeoLocation='" + metaGeoLocation + '\'' +
-                ", metaAuthor='" + metaAuthor + '\'' +
-                ", metaDate=" + metaDate +
-                ", metaTag='" + metaTag + '\'' +
+                "metaSize='" + metaSize + '\'' +
+                ", metaType='" + metaType + '\'' +
                 '}';
     }
 }

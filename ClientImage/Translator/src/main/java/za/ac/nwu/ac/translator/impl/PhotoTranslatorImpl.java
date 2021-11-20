@@ -13,10 +13,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import za.ac.nwu.ac.domain.dto.MetaDataDto;
 import za.ac.nwu.ac.domain.dto.PhotoDto;
+import za.ac.nwu.ac.domain.dto.PhotoQuickStoreDto;
 import za.ac.nwu.ac.domain.persistence.Member;
+import za.ac.nwu.ac.domain.persistence.MetaData;
 import za.ac.nwu.ac.domain.persistence.Photo;
 import za.ac.nwu.ac.repo.persistence.RepoMember;
+import za.ac.nwu.ac.repo.persistence.RepoMetaData;
 import za.ac.nwu.ac.repo.persistence.RepoPhoto;
 import za.ac.nwu.ac.translator.PhotoTranslator;
 
@@ -24,6 +28,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 
 @Component
@@ -33,6 +38,7 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
 
     private final RepoPhoto repoPhoto;
     private final RepoMember repoMember;
+    private final RepoMetaData repoMetaData;
 
     @Value("imagestorage323")
     private String bucket;
@@ -41,17 +47,17 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
     private AmazonS3 amazonS3;
 
     @Autowired
-    public PhotoTranslatorImpl(RepoPhoto repoPhoto, RepoMember repoMember) {
+    public PhotoTranslatorImpl(RepoPhoto repoPhoto, RepoMember repoMember, RepoMetaData repoMetaData) {
         this.repoPhoto = repoPhoto;
         this.repoMember = repoMember;
+        this.repoMetaData =repoMetaData;
     }
 
     @Override
     public String uploadFile(MultipartFile file){
-
         File fileObj = convertMultipartFile(file);
-        String filename = System.currentTimeMillis()+"_"+file.getOriginalFilename();
-        amazonS3.putObject(new PutObjectRequest(bucket,filename,fileObj));
+        String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        amazonS3.putObject(new PutObjectRequest(bucket, filename, fileObj));
         fileObj.delete();
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -59,13 +65,16 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
 
         Member member = repoMember.getMemberByEmail(email);
 
-        String generateLink =  "" + System.currentTimeMillis();
+        String generateLink = "" + System.currentTimeMillis();
 
-        PhotoDto photoDto = new PhotoDto(filename,generateLink,member);
+        MetaData metaData = repoMetaData.save(new MetaData(file.getSize(),file.getContentType()));
+
+
+        PhotoDto photoDto = new PhotoDto(filename, generateLink, member);
 
         Photo photo = repoPhoto.save(photoDto.getPhotos());
-
         return "File Uploaded and saved : " + filename;
+
     }
 
     public Long memberEmailtoID(String email){
@@ -76,7 +85,7 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
     }
 
     @Override
-    public List<String> getPhotos() {
+    public List<PhotoQuickStoreDto> getPhotos() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -85,7 +94,7 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
 
         List<Photo> photos = repoPhoto.getPhotosByID(memberID);
 
-        LinkedList bytes = new LinkedList();
+        List<PhotoQuickStoreDto> bytes = new LinkedList();
 
         for (Photo photo : photos) {
 
@@ -94,7 +103,8 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
             try {
                 byte[] content = IOUtils.toByteArray(inputStream);
                 String encoded = Base64.getEncoder().encodeToString(content);
-                bytes.add(encoded);
+                PhotoQuickStoreDto photoQuickStoreDto = new PhotoQuickStoreDto(encoded,photo.getPhotoURL());
+                bytes.add(photoQuickStoreDto);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -113,7 +123,6 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 

@@ -15,29 +15,23 @@ public class MetaData implements Serializable {
     private static final long serialVersionUID = -2291190826579963737L;
 
     private Long metaID;
-    private String metaGeoLocation;
-    private String metaAuthor;
-    private LocalDate metaDate;
-    private String metaTag;
+    private Long metaSize;
+    private String metaType;
 
     private Set<Photo> photo;
 
     public MetaData() {
     }
 
-    public MetaData(Long metaID, String metaGeoLocation, String metaAuthor, LocalDate metaDate, String metaTag) {
+    public MetaData(Long metaID, Long metaSize, String metaType) {
         this.metaID = metaID;
-        this.metaGeoLocation = metaGeoLocation;
-        this.metaAuthor = metaAuthor;
-        this.metaDate = metaDate;
-        this.metaTag = metaTag;
+        this.metaSize = metaSize;
+        this.metaType = metaType;
     }
 
-    public MetaData(String metaGeoLocation, String metaAuthor, LocalDate metaDate, String metaTag) {
-        this.metaGeoLocation = metaGeoLocation;
-        this.metaAuthor = metaAuthor;
-        this.metaDate = metaDate;
-        this.metaTag = metaTag;
+    public MetaData(Long metaSize, String metaType) {
+        this.metaSize = metaSize;
+        this.metaType = metaType;
     }
 
     @Id
@@ -51,40 +45,22 @@ public class MetaData implements Serializable {
         this.metaID = metaID;
     }
 
-    @Column(name = "meta_geolocation")
-    public String getMetaGeoLocation() {
-        return metaGeoLocation;
+    @Column(name = "meta_size")
+    public Long getMetaSize() {
+        return metaSize;
     }
 
-    public void setMetaGeoLocation(String metaGeoLocation) {
-        this.metaGeoLocation = metaGeoLocation;
+    public void setMetaSize(Long metaSize) {
+        this.metaSize = metaSize;
     }
 
-    @Column(name = "meta_author")
-    public String getMetaAuthor() {
-        return metaAuthor;
+    @Column(name = "meta_type")
+    public String getMetaType() {
+        return metaType;
     }
 
-    public void setMetaAuthor(String metaAuthor) {
-        this.metaAuthor = metaAuthor;
-    }
-
-    @Column(name = "meta_date")
-    public LocalDate getMetaDate() {
-        return metaDate;
-    }
-
-    public void setMetaDate(LocalDate metaDate) {
-        this.metaDate = metaDate;
-    }
-
-    @Column(name = "meta_tag")
-    public String getMetaTag() {
-        return metaTag;
-    }
-
-    public void setMetaTag(String metaTag) {
-        this.metaTag = metaTag;
+    public void setMetaType(String metaType) {
+        this.metaType = metaType;
     }
 
     @JsonIgnore
@@ -102,22 +78,20 @@ public class MetaData implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MetaData metaData = (MetaData) o;
-        return Objects.equals(metaID, metaData.metaID) && Objects.equals(metaGeoLocation, metaData.metaGeoLocation) && Objects.equals(metaAuthor, metaData.metaAuthor) && Objects.equals(metaDate, metaData.metaDate) && Objects.equals(metaTag, metaData.metaTag) && Objects.equals(photo, metaData.photo);
+        return Objects.equals(metaID, metaData.metaID) && Objects.equals(metaSize, metaData.metaSize) && Objects.equals(metaType, metaData.metaType) && Objects.equals(photo, metaData.photo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(metaID, metaGeoLocation, metaAuthor, metaDate, metaTag, photo);
+        return Objects.hash(metaID, metaSize, metaType, photo);
     }
 
     @Override
     public String toString() {
         return "MetaData{" +
                 "metaID=" + metaID +
-                ", metaGeoLocation='" + metaGeoLocation + '\'' +
-                ", metaAuthor='" + metaAuthor + '\'' +
-                ", metaDate=" + metaDate +
-                ", metaTag='" + metaTag + '\'' +
+                ", metaSize='" + metaSize + '\'' +
+                ", metaType='" + metaType + '\'' +
                 ", photo=" + photo +
                 '}';
     }

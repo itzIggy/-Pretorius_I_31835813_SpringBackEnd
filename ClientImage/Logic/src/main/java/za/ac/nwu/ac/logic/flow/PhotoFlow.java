@@ -1,12 +1,13 @@
 package za.ac.nwu.ac.logic.flow;
 
 import org.springframework.web.multipart.MultipartFile;
+import za.ac.nwu.ac.domain.dto.PhotoQuickStoreDto;
 
 import java.util.List;
 
 public interface PhotoFlow {
 
-    List<String> getPhotos();
+    List<PhotoQuickStoreDto> getPhotos();
 
     String DeletePhoto(String fileName);
 
