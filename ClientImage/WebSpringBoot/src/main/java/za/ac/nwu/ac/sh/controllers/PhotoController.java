@@ -46,8 +46,9 @@ public class PhotoController {
     }
 
     @DeleteMapping("/deleteFile/{fileName}")
-    public ResponseEntity<String> deleteFile(@PathVariable String fileName){
-        return new ResponseEntity<>(photoFlow.deleteFile(fileName),HttpStatus.OK);
+    public ResponseEntity<GeneralResponse<String>> deleteFile(@PathVariable String fileName){
+        GeneralResponse<String> response = new GeneralResponse<>(true,photoFlow.deleteFile(fileName));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/getPhotos")
@@ -57,4 +58,10 @@ public class PhotoController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/searchPhoto/{fileName}")
+    public ResponseEntity<GeneralResponse<List<PhotoQuickStoreDto>>> searchPhoto(@PathVariable final String fileName){
+        List<PhotoQuickStoreDto> photoDtos = photoFlow.getPhotosByPhotoName(fileName);
+        GeneralResponse<List<PhotoQuickStoreDto>> response = new GeneralResponse<>(true,photoDtos);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
