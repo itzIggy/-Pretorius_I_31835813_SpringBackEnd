@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import za.ac.nwu.ac.domain.dto.PhotoQuickStoreDto;
+import za.ac.nwu.ac.domain.persistence.Photo;
 import za.ac.nwu.ac.logic.flow.PhotoFlow;
 import za.ac.nwu.ac.translator.MemberTranslator;
 import za.ac.nwu.ac.translator.PhotoTranslator;
@@ -34,6 +35,9 @@ public class PhotoFlowImpl implements PhotoFlow {
     public String DeletePhoto(String fileName){
         return photoTranslator.deletePhoto(fileName);
     }
+
+    @Override
+    public List<PhotoQuickStoreDto> getPhotosByPhotoName(String photoName){ return photoTranslator.getPhotosByPhotoName(photoName);}
 
     @Override
     public byte[] DownloadPhoto(String fileName){
