@@ -23,6 +23,8 @@ import za.ac.nwu.ac.repo.persistence.RepoMember;
 import za.ac.nwu.ac.repo.persistence.RepoMetaData;
 import za.ac.nwu.ac.repo.persistence.RepoPhoto;
 import za.ac.nwu.ac.translator.PhotoTranslator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.transaction.Transactional;
 import java.io.File;
@@ -39,6 +41,7 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
     private final RepoPhoto repoPhoto;
     private final RepoMember repoMember;
     private final RepoMetaData repoMetaData;
+    private static final Logger LOGGER = LoggerFactory.getLogger(PhotoTranslatorImpl.class);
 
     @Value("imagestorage323")
     private String bucket;
@@ -55,6 +58,7 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
 
     @Override
     public String uploadFile(MultipartFile file){
+
         File fileObj = convertMultipartFile(file);
         String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         amazonS3.putObject(new PutObjectRequest(bucket, filename, fileObj));
@@ -62,18 +66,23 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
+        try {
+            Member member = repoMember.getMemberByEmail(email);
 
-        Member member = repoMember.getMemberByEmail(email);
+            String generateLink = "" + System.currentTimeMillis();
 
-        String generateLink = "" + System.currentTimeMillis();
+            String shortname = file.getOriginalFilename();
 
-        MetaData metaData = repoMetaData.save(new MetaData(file.getSize(),file.getContentType()));
+            MetaData metaData = repoMetaData.save(new MetaData(file.getSize(), file.getContentType()));
+            PhotoDto photoDto = new PhotoDto(filename, generateLink, member, metaData, shortname);
 
+            Photo photo = repoPhoto.save(photoDto.getPhotos());
 
-        PhotoDto photoDto = new PhotoDto(filename, generateLink, member);
-
-        Photo photo = repoPhoto.save(photoDto.getPhotos());
-        return "File Uploaded and saved : " + filename;
+            return "File Uploaded and saved : " + filename;
+        }catch (Exception e){
+            LOGGER.error("error for uploading a file");
+            throw new RuntimeException("Unable to upload file", e);
+        }
 
     }
 
@@ -106,6 +115,7 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
                 PhotoQuickStoreDto photoQuickStoreDto = new PhotoQuickStoreDto(encoded,photo.getPhotoURL());
                 bytes.add(photoQuickStoreDto);
             } catch (IOException e) {
+                LOGGER.error("error for getting all user photos");
                 e.printStackTrace();
             }
         }
@@ -121,14 +131,44 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
             byte[] content = IOUtils.toByteArray(inputStream);
             return content;
         } catch (IOException e) {
+            LOGGER.error("error for downloading a file");
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
+    public List<PhotoQuickStoreDto> getPhotosByPhotoName(String photoName){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        Long memberID = memberEmailtoID(email);
+
+        List<Photo> photos = repoPhoto.getPhotoByPhotoName(photoName, memberID);
+
+        List<PhotoQuickStoreDto> bytes = new LinkedList();
+
+        for (Photo photo : photos) {
+
+            S3Object s3Object = amazonS3.getObject(bucket, photo.getPhotoURL());
+            S3ObjectInputStream inputStream = s3Object.getObjectContent();
+            try {
+                byte[] content = IOUtils.toByteArray(inputStream);
+                String encoded = Base64.getEncoder().encodeToString(content);
+                PhotoQuickStoreDto photoQuickStoreDto = new PhotoQuickStoreDto(encoded,photo.getPhotoURL());
+                bytes.add(photoQuickStoreDto);
+            } catch (IOException e) {
+                LOGGER.error("error for getting all user photos");
+                e.printStackTrace();
+            }
+        }
+        return bytes;
+    }
+
+    @Override
     public String deletePhoto(String fileName) {
         amazonS3.deleteObject(bucket,fileName);
+
 
         return fileName+" removed.";
 
@@ -145,8 +185,16 @@ public class PhotoTranslatorImpl implements PhotoTranslator {
         return convertedfile;
     }
 
+    @Override
     public String deleteFile(String fileName){
-        amazonS3.deleteObject(bucket,fileName);
-        return  fileName + " removed...";
+        try {
+            amazonS3.deleteObject(bucket, fileName);
+            repoPhoto.deletePhotoByPhotoName(fileName);
+            return fileName + " removed...";
+        }catch (Exception e){
+            LOGGER.error("error for deleting a file");
+            throw new RuntimeException("Unable to delete from DB!");
+        }
+
     }
 }
